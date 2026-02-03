@@ -4,6 +4,12 @@ var
   saved_a, saved_b, saved_znach,saved_perv: real;
   saved_n: integer;
   a_entered, n_entered, integral_calculated, b_entered: boolean;
+procedure Enter;
+  begin
+  writeln;
+  writeln('Нажмите Enter для возврата в меню');
+  ReadLn; 
+  end;
 function Left(a, b: real; n: integer): real;
 var
   h, sum, x, f: real;
@@ -31,16 +37,10 @@ begin
     begin
       a_entered := false;
       writeln('Ошибка: нижний предел не может быть больше верхнего');
-      writeln('Нажмите Enter для возврата в меню');
-      readln;
-      exit;
+      write('Введите снова: ');
+      readln(saved_a);
     end;
       a_entered := true;
-      integral_calculated := false;
-      writeln;
-      writeln('Предел интегрирования успешно сохраненён');
-      writeln('Нажмите Enter для возврата в меню');
-      readln;
 end;
 procedure InputB;
 begin
@@ -50,16 +50,10 @@ begin
   begin
     b_entered := false;
     writeln('Ошибка: нижний предел не может быть больше верхнего');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
-    exit;
+    write('Введите снова: ');
+    readln(saved_b);
   end;
     b_entered := true;
-    integral_calculated := false;
-    writeln;
-    writeln('Предел интегрирования успешно сохраненён');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
 end;
 procedure InputN;
 begin
@@ -68,31 +62,29 @@ begin
   if saved_n <= 0 then
   begin
     writeln('Ошибка: количество отрезков должно быть положительным');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
-    exit;
+    write('Введите снова: ');
+    readln(saved_n);
   end;
   n_entered := true;
-  integral_calculated := false;
-  writeln;
-  writeln('Количество отрезков успешно сохранено');
-  writeln('Нажмите Enter для возврата в меню');
-  readln;
 end;
 procedure Integral;
 begin
-  if not (a_entered and b_entered) then
+  if not a_entered then
   begin
-    writeln('Ошибка: сначала введите пределы интегрирования (пункт 1,2)');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
+    writeln('Ошибка: сначала введите предел интегрирования (пункт 1)');
+    Enter;
+    exit;
+  end;
+  if not b_entered then
+  begin
+    writeln('Ошибка: сначала введите предел интегрирования (пункт 2)');
+    Enter;
     exit;
   end;
   if not n_entered then
   begin
     writeln('Ошибка: сначала введите количество отрезков (пункт 3)');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
+    Enter;
     exit;
   end;
   saved_znach := Left(saved_a, saved_b, saved_n);
@@ -102,10 +94,11 @@ begin
   writeln('РЕЗУЛЬТАТЫ');
   writeln('Шаг вычислений: h = ', (saved_b-saved_a)/saved_n);
   writeln;
-  writeln('  I = ', saved_perv);
+  writeln('  I_примерное = ', saved_znach);
   writeln;
-  writeln('Нажмите Enter для возврата в меню...');
-  readln;
+  writeln('  I_точное = ', saved_perv);
+  writeln;
+  Enter;
 end;
 procedure Error;
 var
@@ -114,9 +107,8 @@ begin
   writeln('=== ОЦЕНКА ПОГРЕШНОСТИ ===');
   if not integral_calculated then
   begin
-    writeln('Ошибка: сначала выполните вычисление интеграла (пункт 3)');
-    writeln('Нажмите Enter для возврата в меню');
-    readln;
+    writeln('Ошибка: сначала выполните вычисление интеграла (пункт 4)');
+    Enter;
     exit;
   end;
   abs_error := abs(saved_perv - saved_znach);
@@ -128,11 +120,10 @@ begin
   writeln;
   writeln('Относительная погрешность:', ot_error, '%');
   writeln;
-  writeln('Нажмите Enter для возврата в меню');
-  readln;
+  Enter;
 end;
 var
-  choice: integer;
+  vod: integer;
 begin
   a_entered := false;
   b_entered := false;
@@ -145,50 +136,28 @@ begin
     writeln;
     writeln('Функция: f(x) = x^3 + 2x^2 + 3x + 10');
     writeln;
-    writeln('1. Ввод предела интегрирования (a)');
-    writeln('2. Ввод предела интегрирования (b)');
+    writeln('1. Ввод нижнего предела интегрирования (a)');
+    writeln('2. Ввод верхнего предела интегрирования (b)');
     writeln('3. Ввод количества отрезков (n)');
     writeln('4. Вычислить интеграл');
     writeln('5. Оценить погрешность');
     writeln('0. Выйти из программы');
     writeln;
     
-    if a_entered then
-    begin
-      writeln('Текущие пределы интегрирования:');
-      writeln('  a = ', saved_a);
-    end;
-    if b_entered then
-    begin
-      writeln('Текущие пределы интегрирования:');
-      writeln(' b = ', saved_b);
-    end;
-    if n_entered then
-    begin
-      writeln('Текущее количество отрезков:');
-      writeln('  n = ', saved_n);
-    end;
-    if integral_calculated then
-    begin
-      writeln('Результат вычислений:');
-      writeln('  I = ', saved_perv);
-    end;
-    
     writeln('=====================');
     writeln;
     write('Введите номер пункта меню (1-5): ');
     
     //Ввод числа
-    readln(choice);
-    if (choice < 0) or (choice > 5) then
+    readln(vod);
+    if (vod < 0) or (vod > 5) then
     begin
       writeln('Ошибка: введите число от 0 до 5');
-      writeln('Нажмите Enter для продолжения');
-      readln;
+      Enter;
       continue;
     end;
     
-    case choice of
+    case vod of
       1: InputA;
       2: InputB;
       3: InputN;
