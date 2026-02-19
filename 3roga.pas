@@ -33,9 +33,8 @@ procedure InputA;
 begin
   write('Введите нижний предел интегрирования (a): ');
   readln(saved_a);
-  if b_entered and (saved_a > saved_b) then
+  while b_entered and (saved_a > saved_b) do
     begin
-      a_entered := false;
       writeln('Ошибка: нижний предел не может быть больше верхнего');
       write('Введите снова: ');
       readln(saved_a);
@@ -46,9 +45,8 @@ procedure InputB;
 begin
   write('Введите верхний предел интегрирования (b): ');
   readln(saved_b);
-  if a_entered and (saved_a > saved_b) then
+  while a_entered and (saved_a > saved_b) do
   begin
-    b_entered := false;
     writeln('Ошибка: нижний предел не может быть больше верхнего');
     write('Введите снова: ');
     readln(saved_b);
@@ -59,7 +57,7 @@ procedure InputN;
 begin
   write('Введите количество отрезков разбиения (n > 0): ');
   readln(saved_n);
-  if saved_n <= 0 then
+  while saved_n <= 0 do
   begin
     writeln('Ошибка: количество отрезков должно быть положительным');
     write('Введите снова: ');
